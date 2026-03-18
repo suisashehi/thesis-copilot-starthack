@@ -1,0 +1,16 @@
+# Environments
+.env
+.venv
+env/
+venv/
+__pycache__/
+
+# Node/Frontend
+node_modules/
+.next/
+build/
+
+# AI & Data
+ai_engine/chroma_db/
+*.csv
+*.sqlite3
