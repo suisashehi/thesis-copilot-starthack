@@ -3,7 +3,13 @@ import os
 from dotenv import load_dotenv
 from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
+<<<<<<< HEAD
 from langchain_community.vectorstores import Chroma
+=======
+from langchain_chroma import Chroma
+from dotenv import load_dotenv
+import os
+>>>>>>> c38b2e2 (added agent.py and optimized ingest.py)
 
 load_dotenv()
 
