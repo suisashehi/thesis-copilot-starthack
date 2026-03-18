@@ -3,12 +3,18 @@ from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
 from dotenv import load_dotenv
+import os
 
 load_dotenv()
 
 CHROMA_PATH = "./chroma_db"
 
 def load_json(filepath):
+    # If the file doesn't exist, just return an empty list so the code doesn't crash
+    if not os.path.exists(filepath):
+        print(f"Warning: {filepath} not found. Skipping for now.")
+        return []
+        
     with open(filepath, "r", encoding="utf-8") as f:
         return json.load(f)
 
