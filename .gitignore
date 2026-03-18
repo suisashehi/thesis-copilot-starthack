@@ -14,3 +14,16 @@ build/
 ai_engine/chroma_db/
 *.csv
 *.sqlite3
+
+# Backend / Python Specific
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+*.egg-info/
+
+# FastAPI / Uvicorn
+.webassets-cache
