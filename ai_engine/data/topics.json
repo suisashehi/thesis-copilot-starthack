@@ -1,0 +1,17 @@
+[
+  {
+    "id": "t-1",
+    "title": "Crop Yield Optimization AI",
+    "description": "Build a predictive model for Mars.",
+    "type": "topic",
+    "employment": "yes",
+    "employmentType": "internship",
+    "workplaceType": "hybrid",
+    "degrees": ["msc"],
+    "fieldIds": ["f-1"],
+    "companyId": "c-1",
+    "universityId": null,
+    "supervisorIds": [],
+    "expertIds": []
+  }
+]
