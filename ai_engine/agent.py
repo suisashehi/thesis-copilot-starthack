@@ -39,17 +39,45 @@ def run_copilot(user_message: str):
         embedding_function=OpenAIEmbeddings(model="text-embedding-3-small")
     )
     
-    # We turn the extracted profile into a search query
     search_query = f"Skills: {', '.join(profile.extracted_skills)}. Interests: {', '.join(profile.core_interests)}"
-    
-    # Search the database for the top 1 closest match
     retriever = vectorstore.as_retriever(search_kwargs={"k": 1}) 
     docs = retriever.invoke(search_query)
+    
+    match_metadata = docs[0].metadata if docs else None
+
+    # --- MOMENT 4: THE PITCH ENGINE (The Magic Button) ---
+    email_draft = "No match found to generate a pitch."
+    
+    if match_metadata:
+        print("LLM is drafting the personalized outreach email...")
+        
+        # We use a slightly higher temperature (0.7) here so the email sounds human and natural
+        writer_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.7)
+        
+        pitch_prompt = ChatPromptTemplate.from_messages([
+            ("system", """You are an expert career advisor. Write a concise, professional cold email 
+            for this student to apply for the provided thesis project. 
+            Rules:
+            1. Keep it under 150 words.
+            2. Explicitly connect the student's skills to the project.
+            3. Do not use generic placeholders like [Insert Name] if you have the data.
+            4. Make it sound enthusiastic but academic."""),
+            ("human", "Student Profile: {profile}\n\nThesis Project: {project}")
+        ])
+        
+        pitch_chain = pitch_prompt | writer_llm
+        pitch_response = pitch_chain.invoke({
+            "profile": json.dumps(profile.model_dump()),
+            "project": json.dumps(match_metadata)
+        })
+        
+        email_draft = pitch_response.content
     
     # --- THE HANDOFF (Packaging data for your Backend/Frontend) ---
     final_output = {
         "extracted_profile": profile.model_dump(),
-        "top_match_found": docs[0].metadata if docs else "No match found."
+        "top_match_found": match_metadata or "No match found.",
+        "generated_pitch": email_draft # <-- We added the newly generated email to the payload!
     }
     
     return final_output
