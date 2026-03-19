@@ -6,7 +6,7 @@ from agent import run_copilot
 # 1. Initialize the API
 app = FastAPI(title="Studyond AI Copilot API")
 
-# 2. Hackathon Magic: Prevent CORS errors
+# 2. Prevent CORS errors
 # This allows your web app (running on a different port) to talk to this Python server without the browser blocking it.
 app.add_middleware(
     CORSMiddleware,
