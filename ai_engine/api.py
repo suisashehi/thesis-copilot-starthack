@@ -23,7 +23,7 @@ class ChatRequest(BaseModel):
 # 4. Create the URL endpoint
 @app.post("/api/chat")
 async def chat_with_copilot(request: ChatRequest):
-    print(f"🌐 API Received a message: {request.message}")
+    print(f"API Received a message: {request.message}")
     
     # Run your exact agent pipeline
     result = run_copilot(request.message)
