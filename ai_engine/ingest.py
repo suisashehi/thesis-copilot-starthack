@@ -3,13 +3,7 @@ import os
 from dotenv import load_dotenv
 from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
-<<<<<<< HEAD
-from langchain_community.vectorstores import Chroma
-=======
 from langchain_chroma import Chroma
-from dotenv import load_dotenv
-import os
->>>>>>> c38b2e2 (added agent.py and optimized ingest.py)
 
 load_dotenv()
 
@@ -19,23 +13,23 @@ CHROMA_PATH = "./chroma_db"
 def load_json(filepath):
     # If the file doesn't exist, just return an empty list
     if not os.path.exists(filepath):
-        print(f"⚠️ Warning: {filepath} not found. Check your folder structure!")
+        print(f"Warning: {filepath} not found. Check your folder structure!")
         return []
         
     with open(filepath, "r", encoding="utf-8") as f:
         return json.load(f)
 
 def build_vector_database():
-    print("🚀 Loading Studyond relational data...")
+    print("Loading Studyond relational data...")
     
     # We load what we can. If a file is missing, it just returns an empty list []
-    topics = load_json("ai_engine/data/topics.json")
-    companies = load_json("ai_engine/data/companies.json")
-    supervisors = load_json("ai_engine/data/supervisors.json")
-    experts = load_json("ai_engine/data/experts.json")
+    topics = load_json("data/topics.json")
+    companies = load_json("data/companies.json")
+    supervisors = load_json("data/supervisors.json")
+    experts = load_json("data/experts.json")
 
     if not topics:
-        print("❌ Error: Still can't find topics.json. The brain is empty!")
+        print("Error: Still can't find topics.json. The brain is empty!")
         return
 
     # Create lookup dictionaries (Using .get to prevent crashes if IDs are missing)
@@ -43,7 +37,7 @@ def build_vector_database():
     expert_dict = {e.get("id"): e for e in experts if "id" in e}
 
     documents = []
-    print("🧠 Merging data and creating embeddings... (almost done!)")
+    print("Merging data and creating embeddings... (almost done!)")
     
     for topic in topics:
         # Basic check to ensure we only process 'topic' types
@@ -75,7 +69,7 @@ def build_vector_database():
         persist_directory=CHROMA_PATH
     )
     
-    print(f"✅ Success! Embedded {len(documents)} topics into the AI Brain.")
+    print(f"Success! Embedded {len(documents)} topics into the AI Brain.")
 
 if __name__ == "__main__":
     build_vector_database()
