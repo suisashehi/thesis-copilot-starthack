@@ -1,13 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from agent import run_copilot
+from agent import search_projects, generate_pitch
 
-# 1. Initialize the API
 app = FastAPI(title="Studyond AI Copilot API")
 
-# 2. Prevent CORS errors
-# This allows your web app (running on a different port) to talk to this Python server without the browser blocking it.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], 
@@ -16,17 +13,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 3. Define the incoming data structure
+# Data structures expected from the frontend
 class ChatRequest(BaseModel):
     message: str
 
-# 4. Create the URL endpoint
-@app.post("/api/chat")
-async def chat_with_copilot(request: ChatRequest):
-    print(f"API Received a message: {request.message}")
-    
-    # Run your exact agent pipeline
-    result = run_copilot(request.message)
-    
-    # Send the JSON payload back to the web app
-    return result
+class DraftRequest(BaseModel):
+    profile: dict
+    selected_project: dict
+
+# ENDPOINT 1: The Search
+@app.post("/api/search")
+async def handle_search(request: ChatRequest):
+    print("🌐 API Received a search request.")
+    return search_projects(request.message)
+
+# ENDPOINT 2: The Email Drafter
+@app.post("/api/draft")
+async def handle_draft(request: DraftRequest):
+    print("🌐 API Received a draft request.")
+    return generate_pitch(request.profile, request.selected_project)
